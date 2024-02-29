@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/vagrant/shared":{"guestpath":"/home/vagrant/shared","hostpath":"/home/mbadi/Desktop/DevOps/k8s-local-lab","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/mbadi/Desktop/DevOps/k8s-local-lab","disabled":false,"__vagrantfile":true}}}

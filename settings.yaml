@@ -1,0 +1,22 @@
+cluster_name: Kubernetes Cluster
+network:
+  control_ip: 192.168.56.10
+  dns_servers:
+    - 8.8.8.8
+    - 1.1.1.1
+  pod_cidr: 172.16.1.0/16
+  service_cidr: 172.17.1.0/18
+  
+nodes:
+  control:
+    cpu: 2
+    memory: 2048
+  workers:
+    count: 1
+    cpu: 1
+    memory: 512
+
+
+shared_dir:
+   - host_path: ./
+     vm_path: /home/vagrant/shared
