@@ -1,6 +1,1 @@
 .vagrant/
-join.sh
-
-shared/.cache
-shared/.local
-shared/.ssh
