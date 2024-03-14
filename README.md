@@ -1,13 +1,18 @@
 # Creating a multi-node Kubernetes cluster on local machine
+This guide will bring you close to a real world use case of Kubernetes, on your local machine!
 
-We need to install [VirtualBox](https://www.virtualbox.org/) and [Vagrant](https://www.vagrantup.com/) on our machine. Make sure that our machine has enough RAM to run multiple VMs.
+Requirements:
+1. [VirtualBox](https://www.virtualbox.org/) 
+2. [Vagrant](https://www.vagrantup.com/) on our machine. 
 
-This quick guide is applicable from Kubernetes version `1.24+` onward. See [https://kubernetes.io/blog/2022/02/17/dockershim-faq/](https://kubernetes.io/blog/2022/02/17/dockershim-faq/) for more details about breaking changes from the Kubernetes version `1.24+`.
+May God help you if you have less than 4GB of RAM.
+
+For Kubernetes version `1.24+`
 
 ## Provisioning VMs with all necessary tools
 ```sh
-$ git clone https://github.com/vancanhuit/vagrant-k8s.git
-$ cd vagrant-k8s
+$ git clone https://github.com/mosesmbadi/k8s-local-lab.git
+$ cd k8s-local-lab
 $ vagrant up
 $ vagrant reload
 ```
@@ -22,8 +27,7 @@ $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
-Install [Calico](https://projectcalico.docs.tigera.io/getting-started/kubernetes/quickstart) (we may choose another Pod network add-on from [here](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model) instead) to finish setting up our control plane node:
-
+Let's configure Calico for networking:
 ```sh
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
 $ kubectl create -f /vagrant/custom-resources.yaml
@@ -43,9 +47,10 @@ $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
    openssl dgst -sha256 -hex | sed 's/^.* //'
 ```
 
-Do the same procedure on `node-02`.
+Do the same procedure on each worker node.
 
-Now we should have a 3-node Kubernetes cluster running on our local machine:
+Now we should have a 3-node Kubernetes cluster running on our local machine.
+here are some commands you can start with:
 
 ```sh
 $ vagrant ssh master
@@ -62,4 +67,4 @@ $ kubectl get all --all-namespaces
 ```
 
 
-![screenshot](.screenshots/k8s-local-dev.png)
+![screenshot](./screenshots/k8s-local-dev.png)
