@@ -9,18 +9,23 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  config.vm.define "control-plane" do |node|
-    node.vm.hostname = "control-plane"
+  config.vm.define "master" do |node|
+    node.vm.hostname = "master"
     node.vm.network "private_network", ip: "192.168.56.10"
   end
 
-  (1..2).each do |i|
-    hostname = "node-#{'%02d' % i}"
-    config.vm.define "#{hostname}" do |node|
-      node.vm.hostname = "#{hostname}"
-      node.vm.network "private_network", ip: "192.168.56.#{10 + i}"
-    end
+  config.vm.define "node1" do |node|
+      node.vm.hostname = "mode1"
+      node.vm.network "private_network", ip: "192.168.56.11"
   end
+
+  # (1..2).each do |i|
+  #   hostname = "node-#{'%02d' % i}"
+  #   config.vm.define "#{hostname}" do |node|
+  #     node.vm.hostname = "#{hostname}"
+  #     node.vm.network "private_network", ip: "192.168.56.#{10 + i}"
+  #   end
+  # end
 
   config.vm.provision "shell", name: "disable-swap", path: "disable-swap.sh", privileged: false
   config.vm.provision "shell", name: "install-essential-tools", path: "install-essential-tools.sh", privileged: false
