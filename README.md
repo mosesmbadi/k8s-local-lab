@@ -68,3 +68,12 @@ $ kubectl get all --all-namespaces
 
 
 ![screenshot](./screenshots/k8s-local-dev.png)
+
+# Next Steps
+Open the Kubernetes Pocket Guide from ./learning-resources
+and let the games begin...
+
+If you appreciate free education, feel free to make a donation
+
+[PayPal Donate](https://www.paypal.com/donate/?hosted_button_id=45A3RRNJMNAGQ)
+[Bitcoin Donate](bc1q9cymjyzt7zj28zcztjafys0sur329gektd4zzh)
