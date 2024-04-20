@@ -13,20 +13,20 @@ Vagrant.configure("2") do |config|
     node.vm.hostname = "master"
     node.vm.network "private_network", ip: "192.168.56.10"
     config.vm.network "forwarded_port", guest: 8001, host: 3030, auto_correct: true
-    config.vm.synced_folder "/home/mbadi/DevOps/k8s-local-lab/shared/master/", "/home/vagrant/shared", disabled: false
+    config.vm.synced_folder ".", "/home/vagrant/shared", disabled: false
     
   end
 
   config.vm.define "node1" do |node|
       node.vm.hostname = "mode1"
       node.vm.network "private_network", ip: "192.168.56.11"
-      config.vm.synced_folder "/home/mbadi/DevOps/k8s-local-lab/shared/nodes/", "/home/vagrant/shared"
+      config.vm.synced_folder ".", "/home/vagrant/shared"
   end
 
   config.vm.define "node2" do |node|
     node.vm.hostname = "node2"
     node.vm.network "private_network", ip: "192.168.56.12"
-    config.vm.synced_folder "/home/mbadi/DevOps/k8s-local-lab/shared/nodes/", "/home/vagrant/shared"
+    config.vm.synced_folder ".", "/home/vagrant/shared"
 end
 
 

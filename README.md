@@ -23,6 +23,10 @@ After all VMs are provisioned, follow this [guide](https://kubernetes.io/docs/se
 ```sh
 $ vagrant ssh master
 $ sudo kubeadm init --apiserver-advertise-address=192.168.56.10 --pod-network-cidr=10.244.0.0/16
+```
+Note the token gotten after the above command
+
+```
 $ mkdir -p $HOME/.kube
 $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -30,7 +34,7 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 Let's configure Calico for networking:
 ```sh
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
-$ kubectl create -f /vagrant/custom-resources.yaml
+$ kubectl create -f ./shared/scripts/helpers/custom-resources.yaml
 ```
 
 ## Joining worker nodes
@@ -69,7 +73,10 @@ $ kubectl get all --all-namespaces
 
 ![screenshot](./screenshots/k8s-local-dev.png)
 
-# Next Steps
+
+## Kubernetes Dashboard
+
+## Next Steps
 Open the Kubernetes Pocket Guide from ./learning-resources
 and let the games begin...
 

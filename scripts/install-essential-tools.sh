@@ -16,10 +16,10 @@ sudo apt-get --quiet --yes install git \
                             vim curl \
                             wget htop tmux jq net-tools resolvconf
 
-cp -v /vagrant/.vimrc ~/.vimrc
-cp -v /vagrant/.tmux.conf ~/.tmux.conf
+cp -v ./shared/scripts/helpers/.vimrc ~/.vimrc
+cp -v ./shared/scripts/helpers/.tmux.conf ~/.tmux.conf
 
-sudo timedatectl set-timezone 'Asia/Ho_Chi_Minh'
+sudo timedatectl set-timezone 'Africa/Nairobi'
 sudo dpkg-reconfigure --frontend=${DEBIAN_FRONTEND} tzdata
 
 echo "nameserver 1.1.1.1" | sudo tee /etc/resolvconf/resolv.conf.d/head
