@@ -1,0 +1,68 @@
+#Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: easymed
+
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easymed
+  namespace: easymed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easymed
+  template:
+    metadata:
+      labels:
+        app: easymed
+    spec:
+      containers:
+      - name: easymed
+        image: mosesmbadi/easymedfrontend
+        ports:
+        - containerPort: 3000
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: easymed
+  namespace: easymed
+spec:
+  selector:
+    app: easymed
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: NodePort
+
+
+---
+# # Ingress
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: nextjs-ingress
+#   namespace: nextjs-app
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+# spec:
+#   rules:
+#   - host: nextjs.local
+#     http:
+#       paths:
+#       - path: /
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: nextjs-service
+#             port:
+#               number: 80

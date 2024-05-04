@@ -50,6 +50,10 @@ $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
    openssl rsa -pubin -outform der 2>/dev/null | \
    openssl dgst -sha256 -hex | sed 's/^.* //'
 ```
+If for some reason you cant find the token, you can regenerate with
+```sh
+$ kubeadm token create --ttl 8760h
+```
 
 Do the same procedure on each worker node.
 
@@ -81,6 +85,29 @@ Open the Kubernetes Pocket Guide from ./learning-resources
 and let the games begin...
 
 If you appreciate free education, feel free to make a donation
+
+
+Let's deploy an application
+```sh
+kubectl apply -f  shared/shared/master/manifests
+```
+
+Get more info about a pod
+```sh
+kubectl describe pod <pod-name>
+```
+
+Exec into a container
+```sh
+kubectl exec -it <pod-name> -c <container-name> -- /bin/bash
+```
+
+To access your application outside the cluster 
+```kubectl get service -n easymed``
+This will show you the port the application is running on, assuming you used a NodePort in your service definition
+You can then access your application with 
+```<node-ipaddress>:port```
+
 
 [PayPal Donate](https://www.paypal.com/donate/?hosted_button_id=45A3RRNJMNAGQ)
 [Bitcoin Donate](bc1q9cymjyzt7zj28zcztjafys0sur329gektd4zzh)
