@@ -1,0 +1,68 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextjs-app
+
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs-deployment
+  namespace: nextjs-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+  template:
+    metadata:
+      labels:
+        app: nextjs
+    spec:
+      containers:
+      - name: nextjs-container
+        image: sunny0183/nextjs-docker
+        ports:
+        - containerPort: 3000
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-service
+  namespace: nextjs-app
+spec:
+  selector:
+    app: nextjs
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: NodePort
+
+
+---
+# Ingress
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nextjs-ingress
+  namespace: nextjs-app
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: nextjs.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nextjs-service
+            port:
+              number: 80
