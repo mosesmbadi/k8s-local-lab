@@ -34,12 +34,13 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 Let's configure Calico for networking:
 ```sh
 $ kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.0/manifests/tigera-operator.yaml
-$ kubectl create -f ./shared/scripts/helpers/custom-resources.yaml
+$ kubectl create -f ./shared/helpers/custom-resources.yaml
 ```
+
 
 ## Joining worker nodes
 ```sh
-$ vagrant ssh node-01
+$ vagrant ssh node1
 $ sudo kubeadm join 192.168.56.10:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ```
 The join command can be found after running the `kubeadm init` command above but we can find token and hash values by running the following commands on the control plane node:
@@ -107,6 +108,38 @@ To access your application outside the cluster
 This will show you the port the application is running on, assuming you used a NodePort in your service definition
 You can then access your application with 
 ```<node-ipaddress>:port```
+
+
+
+To read logs
+kubectl logs -l app=easymed-api -n easymed
+
+
+========================
+Troubleshooting
+Confirm all scripts ran - by running them manually
+If your kubelet is stuck here ``Active: activating``(auto-restart)
+
+type ``sudo swapoff -a`` on each node
+
+If that doesnt work, check kubelet logs
+``sudo journalctl -u kubelet -n 100 --no-pager``
+That might help you identify the issue
+
+If still facing errors destroy the machines then rebuild without scripts
+``vagrant destroy -f``
+``vagrant up``
+
+then run the scripts manually in the order shown below
+```sh
+disable-swap.sh
+install-essential-tools.sh
+scripts/allow-bridge-nf-traffic.sh
+scripts/install-containerd.sh
+scripts/install-kubeadm.sh
+scripts/update-kubelet-config.sh
+```
+=====================
 
 
 [PayPal Donate](https://www.paypal.com/donate/?hosted_button_id=45A3RRNJMNAGQ)

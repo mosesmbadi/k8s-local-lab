@@ -12,7 +12,7 @@ containerd config default | sudo tee /etc/containerd/config.toml > /dev/null
 sudo sed -i 's/^\(\s*SystemdCgroup\)\s*=\s*false$/\1 = true/' /etc/containerd/config.toml
 
 sudo mkdir -pv /usr/local/lib/systemd/system
-sudo cp -v ./shared/scripts/helpers/containerd.service /usr/local/lib/systemd/system/containerd.service
+sudo cp -v /home/vagrant/shared/helpers/containerd.service /usr/local/lib/systemd/system/containerd.service
 sudo systemctl daemon-reload
 sudo systemctl enable --now containerd
 

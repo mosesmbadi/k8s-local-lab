@@ -16,8 +16,9 @@ sudo apt-get --quiet --yes install git \
                             vim curl \
                             wget htop tmux jq net-tools resolvconf
 
-cp -v ./shared/scripts/helpers/.vimrc ~/.vimrc
-cp -v ./shared/scripts/helpers/.tmux.conf ~/.tmux.conf
+cp -v /home/vagrant/shared/helpers/.vimrc ~/.vimrc
+
+cp -v /home/vagrant/shared/helpers/.tmux.conf ~/.tmux.conf
 
 sudo timedatectl set-timezone 'Africa/Nairobi'
 sudo dpkg-reconfigure --frontend=${DEBIAN_FRONTEND} tzdata
