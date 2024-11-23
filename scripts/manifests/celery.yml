@@ -1,0 +1,110 @@
+# Deployment  
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: easymed
+  labels:
+    deployment: redis
+spec:
+  selector:
+    matchLabels:
+      pod: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        pod: redis
+    spec:
+      containers:
+        - name: master
+          image: redis:7.0.3-alpine
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+          - containerPort: 6379
+
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: easymed-redis
+  namespace: easymed
+spec:
+  selector:
+    pod: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379         
+
+---
+# Deployment - celery beat
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-beat
+  namespace: easymed
+  labels:
+    deployment: celery-beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: celery-beat
+  template:
+    metadata:
+      labels:
+        pod: celery-beat
+    spec:
+      containers:
+        - name: celery-beat
+          image: mosesmbadi/easymedbackend
+          command: ['sh', '-c', "cd /app/backend && celery -A easymed beat -l INFO"]
+          envFrom:
+            - secretRef:
+                name: easymed-secret
+            - configMapRef:
+                name: easymed-config
+
+---
+# Deployment - celery worker
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  namespace: easymed
+  labels:
+    deployment: celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: celery-worker
+  template:
+    metadata:
+      labels:
+        pod: celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: mosesmbadi/easymedbackend
+          command: ['sh', '-c', "cd /app/backend && celery -A easymed worker -l INFO"]
+          envFrom:
+            - secretRef:
+                name: easymed-secret
+            - configMapRef:
+                name: easymed-config
+          volumeMounts:
+            - name: media-volume-mount
+              mountPath: /app/easymed/media
+      volumes:
+        - name: media-volume-mount
+          persistentVolumeClaim:
+            claimName: media-pvc
+
+

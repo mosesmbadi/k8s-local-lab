@@ -1,0 +1,131 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: easymed
+
+---
+# ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: easymed-config
+  namespace: easymed
+data:
+  DEBUG: "True"
+  REDIS_HOST: "easymed-redis"
+  DB_HOST: "easymed-db"
+  SECRET_KEY: "django-insecure--d8^ja_j-qc7$to9u669%5wilc73e)eza2j0k-zok&oit&x0wi"
+  EMAIL_BACKEND: "django.core.mail.backends.smtp.EmailBackend"
+  EMAIL_USE_TLS: "true"
+  EMAIL_HOST: "mail.proto-typesolutions.com"
+  EMAIL_PORT: "587"
+  EMAIL_HOST_USER: "easymed@proto-typesolutions.com"
+  EMAIL_HOST_PASSWORD: "zPOuCCgL1fpPT2k"
+  CELERY_BROKER_URL: "redis://redis:6379/0"
+  CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+  POSTGRES_HOST: "192.168.100.56"
+  POSTGRES_NAME: "easymed"
+  POSTGRES_USER: "mbadi"
+  POSTGRES_PASSWORD: "mbadi"
+  POSTGRES_DB: "easymed"
+  POSTGRES_PORT: "5432"
+  DB_ENGINE: "django.db.backends.postgresql"
+  DJANGO_SETTINGS_MODULE: "easymed.settings.base"
+  NEXT_PUBLIC_HMIS_VERSION: "v0.0.1-alpha-0.1"
+  NETWORK_EQUIPMENT_IP: "172.16.4.26"
+  NETWORK_INPUT_WORKLIST_FILE: "smb://user:user@172.16.4.26/Hi/Human/LIS/ASTM"
+  NETWORK_USER_PASSWORD: "user"
+  NETWORK_USERNAME: "user"
+  BACKEND_USERNAME: "admin@mail.com"
+  BACKEND_PASSWORD: "admin"
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easymed-api
+  namespace: easymed
+  labels:
+    app: easymed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easymed
+  template:
+    metadata:
+      labels:
+        app: easymed
+    spec:
+      containers:
+        - image: mosesmbadi/easymedbackend
+          name: easymed
+          envFrom:
+          - configMapRef:
+              name: easymed-config
+          ports:
+            - containerPort: 80
+              name: gunicorn
+          volumeMounts:
+            - name: media-volume-mount
+              mountPath: /app/easymed/media
+      volumes:
+        - name: media-volume-mount
+          persistentVolumeClaim:
+            claimName: media-pvc  
+
+---
+# PersistentVolume
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-pv
+  labels:
+    type: local
+  namespace: easymed
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data/media-pv
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-pvc
+  labels:
+    type: local
+  namespace: easymed
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  volumeName: media-pv
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: easymed
+  labels:
+    app: easymed
+  namespace: easymed
+spec:
+  selector:
+    app: easymed
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 80
+  type: NodePort
