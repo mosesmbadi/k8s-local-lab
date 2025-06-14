@@ -43,7 +43,7 @@ $ kubectl create -f ./shared/helpers/custom-resources.yaml
 $ vagrant ssh node1
 $ sudo kubeadm join 192.168.56.10:6443 --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ```
-The join command can be found after running the `kubeadm init` command above but we can find token and hash values by running the following commands on the control plane node:
+We've typed the join command here, but the join command can also be found after running the `kubeadm init`. If you didn't copy it, you can find it again by running the following commands on the master node:
 
 ```sh
 $ kubeadm token list
@@ -51,12 +51,13 @@ $ openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | \
    openssl rsa -pubin -outform der 2>/dev/null | \
    openssl dgst -sha256 -hex | sed 's/^.* //'
 ```
+
 If for some reason you cant find the token, you can regenerate with
 ```sh
 $ kubeadm token create --ttl 8760h
 ```
 
-Do the same procedure on each worker node.
+Run the same join command on each worker node.
 
 Now we should have a 3-node Kubernetes cluster running on our local machine.
 here are some commands you can start with:
