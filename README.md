@@ -81,6 +81,8 @@ $ kubectl get all --all-namespaces
 
 
 ## Kubernetes Dashboard
+NB: I will get back to this later.
+
 
 ## Next Steps
 Open the Kubernetes Pocket Guide from ./learning-resources
@@ -88,15 +90,17 @@ and let the games begin...
 
 If you appreciate free education, feel free to make a donation
 
-
-Let's deploy an application
+###  Let's deploy an application
 ```sh
-kubectl apply -f  shared/shared/master/manifests
+kubectl apply -f ./shared/manifests/manifests
 ```
 
-Get more info about a pod
+Get more info about a pod or cluster activities
 ```sh
+kubectl get pods
 kubectl describe pod <pod-name>
+kubectl get events --all-namespaces --field-selector type=Warning
+kubectl get events -w
 ```
 
 Exec into a container

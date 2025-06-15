@@ -15,7 +15,7 @@ Vagrant.configure("2") do |config|
     node.vm.network "private_network", ip: "192.168.56.10"
     config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     config.vm.synced_folder "./scripts", "/home/vagrant/shared", disabled: false
-    config.vm.synced_folder "./shared/master", "/home/vagrant/shared/manifests", disabled: false
+    config.vm.synced_folder "./shared/master", "/home/vagrant/shared/master", disabled: false
 
     node.vm.provision "shell", name: "disable-swap", path: "scripts/disable-swap.sh", privileged: false
     node.vm.provision "shell", name: "install-essential-tools", path: "scripts/install-essential-tools.sh", privileged: false
